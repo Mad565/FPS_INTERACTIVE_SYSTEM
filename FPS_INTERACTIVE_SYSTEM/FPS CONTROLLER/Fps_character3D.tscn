@@ -1,0 +1,83 @@
+[gd_scene load_steps=12 format=3 uid="uid://b5x2vn8i0kqvs"]
+
+[ext_resource type="Script" path="res://FPS CONTROLLER/Fps.gd" id="1_s5gs8"]
+[ext_resource type="PackedScene" uid="uid://cgfbrqa24h4wn" path="res://crosshair/crosshair.tscn" id="2_mouc4"]
+[ext_resource type="AudioStream" uid="uid://nqb0344c8xdl" path="res://FPS CONTROLLER/SOUND/JUMP_SOUND.wav" id="3_ol07b"]
+[ext_resource type="Script" path="res://adaptive-audio-player-main/adaptiveaudioplayer.gd" id="5_2m7q4"]
+[ext_resource type="AudioStream" uid="uid://iswxnrswhh3f" path="res://FPS CONTROLLER/SOUND/WALK_SOUND.wav" id="6_gteyx"]
+[ext_resource type="AudioStream" uid="uid://ql3jrkhcq3jc" path="res://FPS CONTROLLER/SOUND/JUMP_LANDED.wav" id="8_j3i0r"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6qgcx"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_j8thp"]
+
+[sub_resource type="Sky" id="Sky_b0e4i"]
+sky_material = SubResource("ProceduralSkyMaterial_j8thp")
+
+[sub_resource type="Environment" id="Environment_tq8f0"]
+background_mode = 2
+sky = SubResource("Sky_b0e4i")
+tonemap_white = 1.5
+glow_blend_mode = 1
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fle4u"]
+size = Vector3(0.035, 0.035, 0.035)
+
+[node name="Fps_character3D" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("1_s5gs8")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_6qgcx")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Head"]
+environment = SubResource("Environment_tq8f0")
+fov = 90.0
+near = 0.001
+
+[node name="OBJ_PICKER" type="Node3D" parent="Head/Camera3D"]
+
+[node name="RayCast3D" type="RayCast3D" parent="Head/Camera3D/OBJ_PICKER"]
+target_position = Vector3(0, 0, -3)
+
+[node name="Marker3D" type="Marker3D" parent="Head/Camera3D/OBJ_PICKER"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.00265)
+
+[node name="Joint3D" type="Generic6DOFJoint3D" parent="Head/Camera3D/OBJ_PICKER"]
+node_a = NodePath("../Body3D")
+linear_limit_x/enabled = false
+linear_limit_y/enabled = false
+linear_limit_z/enabled = false
+
+[node name="Body3D" type="StaticBody3D" parent="Head/Camera3D/OBJ_PICKER"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Head/Camera3D/OBJ_PICKER/Body3D"]
+shape = SubResource("BoxShape3D_fle4u")
+disabled = true
+
+[node name="crosshair" parent="Head/Camera3D" instance=ExtResource("2_mouc4")]
+
+[node name="Head_check" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+target_position = Vector3(0, 1, 0)
+
+[node name="sound" type="Node3D" parent="."]
+
+[node name="Timer" type="Timer" parent="sound"]
+one_shot = true
+
+[node name="WALK" type="AudioStreamPlayer3D" parent="sound"]
+stream = ExtResource("6_gteyx")
+script = ExtResource("5_2m7q4")
+
+[node name="JUMPED" type="AudioStreamPlayer3D" parent="sound"]
+stream = ExtResource("3_ol07b")
+script = ExtResource("5_2m7q4")
+
+[node name="LANDED" type="AudioStreamPlayer3D" parent="sound"]
+stream = ExtResource("8_j3i0r")
+script = ExtResource("5_2m7q4")

@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://scqkga1cpd42"]
+
+[ext_resource type="Script" path="res://BUTTONS_AND_DOORS/INTERACTABLE.gd" id="1_c7534"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lqqi6"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1ti45"]
+material = SubResource("StandardMaterial3D_lqqi6")
+size = Vector3(0.035, 0.35, 0.35)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_w5no0"]
+points = PackedVector3Array(0.0175, 0.174966, 0.174966, -0.0175, 0.174966, 0.174966, 0.0175, -0.175, 0.174966, 0.0175, 0.174966, -0.175, -0.0175, 0.174966, -0.175, -0.0175, -0.175, 0.174966, 0.0175, -0.175, -0.175, -0.0175, -0.175, -0.175)
+
+[node name="BUTTON" type="Node3D"]
+script = ExtResource("1_c7534")
+
+[node name="BODY" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="BODY"]
+mesh = SubResource("BoxMesh_1ti45")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BODY"]
+shape = SubResource("ConvexPolygonShape3D_w5no0")
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+target_position = Vector3(1, 0, 0)
